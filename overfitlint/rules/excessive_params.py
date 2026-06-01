@@ -1,11 +1,13 @@
 """excessive-params: too many free numeric parameters (degrees of freedom)."""
 from __future__ import annotations
 
+import ast
+
 from ..core.context import AnalysisContext
 from ..core.finding import Finding, Severity
 from ..core.registry import register
 from ..core.rule import Rule
-from ._util import named_numbers
+from ._util import is_number, named_numbers
 
 
 @register
@@ -32,6 +34,22 @@ class ExcessiveParamsRule(Rule):
             knobs.add(key)
             if len(sample) < 8:
                 sample.append(name)
+
+        # Threshold constants inside comparisons are knobs too — each gate is a
+        # degree of freedom (skip loop bounds compared against len()/range()).
+        for node in ast.walk(ctx.tree):
+            if not isinstance(node, ast.Compare):
+                continue
+            parts = [node.left] + list(node.comparators)
+            if any(
+                isinstance(p, ast.Call) and isinstance(p.func, ast.Name) and p.func.id in ("len", "range")
+                for p in parts
+            ):
+                continue
+            for p in parts:
+                if is_number(p) and p.value not in (0, 1, -1):
+                    knobs.add((p.lineno, p.col_offset))
+
         n = len(knobs)
 
         sev = None

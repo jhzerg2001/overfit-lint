@@ -29,5 +29,11 @@ def test_data_days_ratio_escalates_even_under_count():
     assert f  # 10 params < 15, but 10 days/param < 20 triggers the ratio check
 
 
+def test_counts_inline_threshold_constants():
+    body = " and ".join(f"r.x{i} > {i + 2}.5" for i in range(18))
+    f = _run(f"def f(r):\n    return {body}\n")
+    assert f  # 18 inline gate thresholds exceed the default threshold of 15
+
+
 def test_ignores_trivial_zero_one():
     assert _run("a = 0\nb = 1\nc = -1\nd = 0\n") == []
