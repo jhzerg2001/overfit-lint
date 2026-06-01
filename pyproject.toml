@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "overfit-lint"
+version = "0.1.0"
+description = "Static analysis that flags backtest-overfitting code smells in quant-strategy source."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "jhzerg2001" }]
+keywords = [
+    "quant",
+    "trading",
+    "backtesting",
+    "overfitting",
+    "static-analysis",
+    "linter",
+    "finance",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Office/Business :: Financial :: Investment",
+    "Topic :: Software Development :: Quality Assurance",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[project.scripts]
+overfit-lint = "overfitlint.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/jhzerg2001/overfit-lint"
+Repository = "https://github.com/jhzerg2001/overfit-lint"
+Issues = "https://github.com/jhzerg2001/overfit-lint/issues"
+
+[tool.setuptools.packages.find]
+include = ["overfitlint*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
